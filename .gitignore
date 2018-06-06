@@ -1,5 +1,6 @@
 # Totally Lost default index directory
 ix/
+AllSets.json # cached set data
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
