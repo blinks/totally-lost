@@ -1,3 +1,6 @@
+# Totally Lost default index directory
+ix/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
