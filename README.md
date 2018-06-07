@@ -5,6 +5,7 @@ Magic: The Gathering index and search.
 
 ```
 pip install Flask requests Whoosh
+./gather.py # to generate the initial index
 FLASK_APP=lost.py flask run
 ```
 
