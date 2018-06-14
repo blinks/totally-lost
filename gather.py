@@ -6,8 +6,8 @@ import requests
 import zipfile
 import schema
 
-URL = 'https://mtgjson.com/json/AllCards.json.zip'
-LOCAL = 'AllCards.json'
+URL = 'https://mtgjson.com/json/AllCards-x.json.zip'
+LOCAL = 'AllCards-x.json'
 
 def main(source):
     # Retrieve or open the file of all set data.

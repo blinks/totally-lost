@@ -1,25 +1,23 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "base.html" %}
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-
-    <title>Totally Lost</title>
-  </head>
-  <body>
-    <h1>Totally Lost</h1>
-    <form action='/search' method='get'>
-      <input name='q' type='text' value='{{ query }}'>
-      <input type='submit'>
-    </form>
-
-    <ul>
-      {% for card in results %}
-      <li>{{ card.name }}</li>
-      {% endfor %}
-    </ul>
+{% block content %}
+<ul class='list-group'>
+  {% for card in results %}
+  <li class='list-group-item'>
+    <h2>{{ card.name }} <span class='badge'>{{ card.layout }}</span></h2>
+    <span>{{ card.type }}</span>
+    <p>{{ card.text }}</p>
+    {% if card.power or card.toughness %}
+    <span class='badge badge-secondary'>{{ card.power }}/{{ card.toughness }}</span>
+    {% endif %}
+    {% if card.loyalty %}
+    <span class='badge badge-secondary'>{{ card.loyalty }}</span>
+    {% endif %}
+    </span>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
