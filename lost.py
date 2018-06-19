@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request
+from flask import Flask, Markup, render_template, request, send_from_directory
+import re
 import schema
 app = Flask(__name__)
 
@@ -13,3 +14,29 @@ def search():
     with ix.searcher() as searcher:
         results = searcher.search(schema.parse(query))
         return render_template('results.html', query=query, results=results)
+
+@app.route("/fonts/<path:path>")
+def fonts(path):
+    return send_from_directory('static/fonts', path)
+
+@app.template_filter("symbolize")
+def symbolize(s):
+    # Split into paragraphs.
+    s = '<p>%s</p>' % '</p><p>'.join(s.split('\n'))
+
+    # Italicize reminder text.
+    s = re.sub(r'\((.+?)\)', r'(<i>\1</i>)', s)
+
+    # Substitute icons for symbol text, provided by andrewgioia/Mana
+    # https://andrewgioia.github.io/Mana/icons.html
+    def symrepl(m):
+        key = m.group(1).lower()
+        suffix = 'ms-cost'
+        if key == 't':
+            key = 'tap'
+        elif key == 'chaos':
+            suffix = ''
+        return '<i class="ms ms-%s %s"></i>' % (key, suffix)
+    s = re.sub(r'{(.+?)}', symrepl, s)
+
+    return Markup(s) # disable auto-escape.

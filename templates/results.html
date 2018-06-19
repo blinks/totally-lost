@@ -6,7 +6,7 @@
   <li class='list-group-item'>
     <h2>{{ card.name }} <span class='badge'>{{ card.layout }}</span></h2>
     <span>{{ card.type }}</span>
-    <p>{{ card.text }}</p>
+    <p>{{ card.text | symbolize }}</p>
     {% if card.power or card.toughness %}
     <span class='badge badge-secondary'>{{ card.power }}/{{ card.toughness }}</span>
     {% endif %}
