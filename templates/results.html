@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class='text-center'>
+<svg class='chart'></svg>
+</div>
+
 <ul class='list-group'>
   {% for card in results %}
   <li class='list-group-item'>
-    <h2>{{ card.name }} <span class='badge'>{{ card.layout }}</span></h2>
-    <span>{{ card.type }}</span>
-    <p>{{ card.text | symbolize }}</p>
+    <h2>{{ card.name }}
+      <span class='badge'>{{ card.layout }}</span></h2>
+    <span>{{ card.type }} {{ card.cost | symbolize }}</span>
+    <p>{{ card.text | para }}</p>
     {% if card.power or card.toughness %}
     <span class='badge badge-secondary'>{{ card.power }}/{{ card.toughness }}</span>
     {% endif %}
@@ -19,8 +24,34 @@
 </ul>
 {% endblock %}
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% block script %}
+<script>
+var width = 640, height = 100;
+var facets = {{ results.groups() | tojson }};
+var data = [];
+for (var i = 0; i <= 10; i++) {
+  data.push([i, facets[i] || 0]);
+}
+
+var x = d3.scaleLinear()
+  .domain(d3.extent(data, d => d[0]))
+  .range([0, width]);
+var y = d3.scaleLinear()
+  .domain(d3.extent(data, d => d[1]))
+  .range([height, 0]);
+
+var line = d3.area().curve(d3.curveStep)
+  .x(kv => x(kv[0]))
+  .y(kv => y(kv[1]));
+
+var svg = d3.select('.chart');
+svg.attr('width', width+40).attr('height', height+30)
+  .append('path')
+    .attr('transform', 'translate(20, 10)')
+    .attr('d', line(data));
+svg
+  .append('g')
+  .attr('transform', 'translate(20, 110)')
+  .call(d3.axisBottom(x));
+</script>
+{% endblock %}

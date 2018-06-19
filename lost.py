@@ -1,3 +1,4 @@
+# vim: set fileencoding=utf-8 :
 from flask import Flask, Markup, render_template, request, send_from_directory
 import re
 import schema
@@ -12,18 +13,21 @@ def search():
     query = request.args.get('q', '')
     ix = schema.open_index() # TODO: open once in prod
     with ix.searcher() as searcher:
-        results = searcher.search(schema.parse(query))
+        results, query = schema.search(searcher, query)
         return render_template('results.html', query=query, results=results)
 
 @app.route("/fonts/<path:path>")
 def fonts(path):
     return send_from_directory('static/fonts', path)
 
+@app.template_filter("para")
+def split_paragraphs(s):
+    # Split into paragraphs.
+    s = u'<p>%s</p>' % u'</p><p>'.join(s.split(u'\n'))
+    return Markup(symbolize(s))
+
 @app.template_filter("symbolize")
 def symbolize(s):
-    # Split into paragraphs.
-    s = '<p>%s</p>' % '</p><p>'.join(s.split('\n'))
-
     # Italicize reminder text.
     s = re.sub(r'\((.+?)\)', r'(<i>\1</i>)', s)
 
