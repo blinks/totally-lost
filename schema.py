@@ -21,7 +21,6 @@ class Card(SchemaClass):
     loyalty = NUMERIC()
 
 _schema = Card()
-_qp = qparser.MultifieldParser(['name', 'type', 'cmc', 'text'], schema=_schema)
 
 def create_index(path='ix'):
     if not os.path.exists(path):
@@ -55,6 +54,9 @@ def convert(card):
     # TODO: "legalities" converted to a useful schema.
 
     return document
+
+# Configure the QueryParser.
+_qp = qparser.MultifieldParser(['name', 'type', 'cmc', 'text'], schema=_schema)
 
 def parse(query):
     return _qp.parse(query)

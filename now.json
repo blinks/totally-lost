@@ -1,0 +1,11 @@
+{
+	"name": "totally-lost",
+	"alias": "totally-lost",
+	"files": [
+		"lost.py", "schema.py",
+		"ix",
+		"requirements.txt",
+		"static",
+		"templates"
+	]
+}

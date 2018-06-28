@@ -38,9 +38,4 @@ def index(data):
     writer.commit() # TODO: optimize=True
 
 if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    # As arguments are added here, pass them to main as keyword args.
-    parser.add_argument('--source', type=str, default=URL)
-    args = parser.parse_args()
-    main(args.source)
+    main()

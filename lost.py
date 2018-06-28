@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 from flask import Flask, Markup, render_template, request, send_from_directory
 import re
@@ -44,3 +45,6 @@ def symbolize(s):
     s = re.sub(r'{(.+?)}', symrepl, s)
 
     return Markup(s) # disable auto-escape.
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
