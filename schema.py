@@ -1,6 +1,7 @@
 import os.path
 import re
 from whoosh.fields import SchemaClass, TEXT, KEYWORD, ID, STORED, NUMERIC
+from whoosh.filedb.filestore import FileStorage
 from whoosh import analysis, index, qparser, sorting
 
 text_analyzer = analysis.RegexTokenizer() |\
@@ -12,6 +13,7 @@ class Card(SchemaClass):
     layout = KEYWORD()
     cost = STORED()
     cmc = NUMERIC(numtype=int)
+    colors = KEYWORD(lowercase=True, scorable=True)
     type = KEYWORD(lowercase=True, scorable=True, stored=True)
     text = TEXT(analyzer=text_analyzer, stored=True)
     power = STORED()
@@ -22,13 +24,11 @@ class Card(SchemaClass):
 
 _schema = Card()
 
-def create_index(path='ix'):
-    if not os.path.exists(path):
-        os.mkdir(path)
-    return index.create_in(path, _schema)
+def create_index(storage=FileStorage('ix')):
+    return storage.create_index(_schema)
 
-def open_index(path='ix'):
-    return index.open_dir(path)
+def open_index(storage=FileStorage('ix')):
+    return storage.open_index()
 
 def convert(card):
     """Convert from https://mtgjson.com/documentation.html#cards to a document."""
@@ -37,6 +37,7 @@ def convert(card):
         'layout': card.get('layout', u''),
         'cost': card.get('manaCost', u''),
         'cmc': int(card.get('cmc', u'0')),
+        'colors': u' '.join(card.get('colors', [])),
         'type': card.get('type', u''),
         'text': card.get('text', u''),
     }
@@ -64,6 +65,5 @@ def parse(query):
 def search(searcher, query):
     """Returns a tuple: (results, query)"""
     q = parse(query)
-    print repr(q)
     results = searcher.search(q, groupedby='cmc', maptype=sorting.Count)
     return results, query

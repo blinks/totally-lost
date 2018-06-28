@@ -9,21 +9,15 @@ import schema
 URL = 'https://mtgjson.com/json/AllCards-x.json.zip'
 LOCAL = 'AllCards-x.json'
 
-def main(source):
+def main():
     # Retrieve or open the file of all set data.
-    raw = None
-    if source.startswith('http'):
-        # TODO: Cache this locally, use a timestamp check for staleness.
-        print "Downloading card data."
-        raw = io.BytesIO(requests.get(source).content)
-    else:
-        raw = open(source)
+    # TODO: Cache this locally, use a timestamp check for staleness.
+    print "Downloading card data."
+    raw = io.BytesIO(requests.get(URL).content)
 
     # Unzip that file if necessary.
-    jsonfile = raw
-    if source.endswith('.zip'):
-        print "Decompressing card data."
-        jsonfile = zipfile.ZipFile(raw).open(LOCAL)
+    print "Decompressing card data."
+    jsonfile = zipfile.ZipFile(raw).open(LOCAL)
 
     # Index it.
     print "Indexing card data."

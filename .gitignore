@@ -1,6 +1,7 @@
 # Totally Lost default index directory
 ix/
-AllSets.json # cached set data
+AllSets*.json # cached set data
+AllCards*.json # cached card data
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
